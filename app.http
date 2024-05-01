@@ -1,0 +1,56 @@
+POST http://localhost:3001/register
+Content-Type: application/json
+
+{
+    "username": "nami",
+    "password": "90006080"
+}
+###
+
+GET http://localhost:3001/users
+###
+
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+    "username": "nami",
+    "password": "90006080"
+}
+###
+
+POST http://localhost:3001/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxNDU0MDA5MX0.AI_kO9_YByLAzw7grBXrXcB82DzC5omMJM497CBmoRU
+Content-Type: application/json
+
+{
+    "title": "Javascript",
+    "description": "This is JS",
+    "status": "paused",
+    "assignee_id": 1,
+    "created_at": "2024-05-01 10:00:00",
+    "updated_at": "2024-05-01 10:00:00"
+}
+###
+
+GET http://localhost:3001/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxNDU0MDcyMn0.X9WTpKryemur10eCEVMGyM5ihaOsU2LAlq2QXxX9Sgw
+###
+
+GET http://localhost:3001/tasks/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxNDU0MDcyMn0.X9WTpKryemur10eCEVMGyM5ihaOsU2LAlq2QXxX9Sgw
+###
+
+PUT http://localhost:3001/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxNDU0MDcyMn0.X9WTpKryemur10eCEVMGyM5ihaOsU2LAlq2QXxX9Sgw
+Content-Type: application/json
+
+{
+    "title": "HTML 1",
+    "description": "This is HTML 1",
+    "status": "started"
+}
+###
+
+DELETE http://localhost:3001/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxNDU0MDcyMn0.X9WTpKryemur10eCEVMGyM5ihaOsU2LAlq2QXxX9Sgw
