@@ -383,3 +383,5 @@ app.delete("/tasks/:id", authenticateToken, async (req, res) => {
         console.log(`DB Error ${e.message}`);
     }
 })
+
+module.exports = app;
