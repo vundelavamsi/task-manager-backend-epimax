@@ -51,6 +51,12 @@ The API endpoints are as follows:
 - `PUT /tasks/:id`: Update a specific task by ID.
 - `DELETE /tasks/:id`: Delete a specific task by ID.
 
+### **Swagger Documentation**
+
+To test the API Endpoints you can navigate to this below URL
+
+`https://task-manager-backend-epimax.onrender.com/api-docs/`
+
 ## Authentication
 
 User authentication is implemented using JWT (JSON Web Tokens). When a user logs in, a JWT token is generated and sent back as a response. This token must be included in the `Authorization` header of subsequent requests to access protected endpoints.
