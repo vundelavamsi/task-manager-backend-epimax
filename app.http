@@ -52,5 +52,5 @@ Content-Type: application/json
 }
 ###
 
-DELETE http://localhost:3001/tasks/1
+DELETE http://localhost:3001/tasks/7
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxNDU0MDcyMn0.X9WTpKryemur10eCEVMGyM5ihaOsU2LAlq2QXxX9Sgw

@@ -8,6 +8,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 
@@ -33,6 +35,40 @@ initializeDbServer();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+const options  = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Node JS Task Manager API Project',
+            version: '1.0.0'
+        },
+        servers: [
+            {
+                url: 'https://task-manager-backend-epimax.onrender.com'
+            }
+        ],
+        components: {
+            securitySchemes: {
+              bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT'
+              }
+            }
+          }
+    },
+    apis: ['./app.js']
+}
+
+const swaggerSpec = swaggerJSDoc(options)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
 // Middleware to check for Authentication
 const authenticateToken = (request, response, next) => {
     let jwtToken;
@@ -57,6 +93,28 @@ const authenticateToken = (request, response, next) => {
     }
   };
 
+/**
+ * @swagger
+ * /register:
+ *  post:
+ *    summary: This API is used to create a new user
+ *    description: This API is used to create a new user
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              username:
+ *                type: string
+ *              password:
+ *                type: string
+ *    responses:
+ *      200:
+ *        description: User Created
+ */
+
 //API to create a new user
 app.post("/register", async (req, res) => {
     try {
@@ -69,6 +127,18 @@ app.post("/register", async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ *  /users:
+ *    get:
+ *      tags:
+ *        - Users
+ *      summary: Get all the Users
+ *      responses:
+ *        200:
+ *          description: Success
+ * 
+ */
 //API to get all the Users
 app.get("/users", async (req, res) => {
     try {
@@ -79,6 +149,31 @@ app.get("/users", async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ *  /login:
+ *    post:
+ *      tags:
+ *        - Users
+ *      summary: Create a new User
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *              schema:
+ *                  type: object
+ *                  properties:
+ *                      username:
+ *                          type: string
+ *                          example: "user1"
+ *                      password:
+ *                          type: string
+ *                          example: "password1"
+ *      responses:
+ *          200:
+ *              description: User Created
+ *                     
+ */
 //API to login the User
 app.post("/login", async (req, res) => {
     try {
@@ -99,6 +194,45 @@ app.post("/login", async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ *  /tasks:
+ *      post:
+ *          summary: Create a new task
+ *          tags: [Tasks]
+ *          security:
+ *              - bearerAuth: []
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              title:
+ *                                  type: string
+ *                                  description: The title of the task
+ *                              description:
+ *                                  type: string
+ *                                  description: The brief description of the task
+ *                              status:
+ *                                  type: string
+ *                                  description: The status of the task
+ *                              assignee_id:
+ *                                  type: integer
+ *                                  description: The id of the assignee
+ *                              created_at:
+ *                                  type: string
+ *                                  description: The date and time when the task was created
+ *                              updated_at:
+ *                                  type: string
+ *                                  description: The date and time when the task was updated
+ *          responses:
+ *              200:
+ *                  description: The task was created
+ *              400:
+ *                  description: The task was not created
+ */
 //API to create a task
 app.post("/tasks", authenticateToken, async (req, res) => {
     try {
@@ -112,6 +246,18 @@ app.post("/tasks", authenticateToken, async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ *  /tasks:
+ *      get:
+ *          summary: Get all the tasks
+ *          tags: [Tasks]
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  description: All the users 
+ */
 //API to get all the tasks
 app.get("/tasks", authenticateToken, async (req,res) => {
     try {
@@ -123,6 +269,23 @@ app.get("/tasks", authenticateToken, async (req,res) => {
     }
 })
 
+/**
+ * @swagger
+ *  /tasks/{id}:
+ *      get:
+ *          summary: Get a task by id
+ *          tags: [Tasks]
+ *          security:
+ *              - bearerAuth: []
+ *          parameters:
+ *              - in: path
+ *                name: id
+ *                schema:
+ *                  type: integer
+ *          responses:
+ *              200:
+ *                  description: Task fetched successfully
+ */
 //API to get a task by id
 app.get("/tasks/:id", authenticateToken, async (req, res) => {
     try {
@@ -135,6 +298,40 @@ app.get("/tasks/:id", authenticateToken, async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ *  /tasks/{id}:
+ *      put:
+ *          summary: Update a task
+ *          tags: [Tasks]
+ *          security:
+ *              - bearerAuth: []
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  description: id of the task
+ *                  required: true
+ *                  type: integer
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              title:
+ *                                  type: string
+ *                                  description: The title of the task
+ *                              description:
+ *                                  type: string
+ *                                  description: The brief description of the task
+ *                              status:
+ *                                  type: string
+ *                                  description: The status of the task
+ *          responses:
+ *              200:
+ *                  description: Task updated successfully
+ */
 // API to delete a task
 app.put("/tasks/:id", authenticateToken, async (req, res) => {
     try {
@@ -157,6 +354,24 @@ app.put("/tasks/:id", authenticateToken, async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ *  /tasks/{id}:
+ *      delete:
+ *          summary: Delete a task
+ *          tags: [Tasks]
+ *          security:
+ *              - bearerAuth: []
+ *          parameters:
+ *              - in: path
+ *                name: id
+ *                description: id of the task
+ *                required: true
+ *                type: integer
+ *          responses:
+ *              200:
+ *                  description: Task deleted successfully
+ */
 // API to delete specific task
 app.delete("/tasks/:id", authenticateToken, async (req, res) => {
     try {
